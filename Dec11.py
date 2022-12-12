@@ -1,4 +1,5 @@
 from aoccommon import *
+import math
 
 def updateValue(old, op):
     return eval(op)
@@ -16,8 +17,7 @@ with open('Dec11_input.txt') as f:
     totDivide = 1
     for i in range(0, len(lines), 7):
         monkey = int(i / 7)
-        items = lines[i+1].split(":")[1]
-        items = [int(x.strip()) for x in items.split(",")]
+        items = eval("["+ lines[i+1].split(":")[1] +"]")
         addToDict(mPos1, monkey, items.copy())
         addToDict(mPos2, monkey, items.copy())
 
@@ -33,8 +33,7 @@ with open('Dec11_input.txt') as f:
         for m in mChar:
             inspected1[m] += len(mPos1[m])
             for y in mPos1[m]:
-                y = updateValue(y, mChar[m][0])
-                y /= 3
+                y = math.floor(updateValue(y, mChar[m][0]) / 3)
 
                 if y % mChar[m][1]:
                     mPos1[mChar[m][3]].append(y)
@@ -47,8 +46,7 @@ with open('Dec11_input.txt') as f:
         for m in mChar:
             inspected2[m] += len(mPos2[m])
             for y in mPos2[m]:
-                y = updateValue(y, mChar[m][0])
-                y = y % totDivide
+                y = updateValue(y, mChar[m][0]) % totDivide
 
                 if y % mChar[m][1]:
                     mPos2[mChar[m][3]].append(y)
