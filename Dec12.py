@@ -1,18 +1,14 @@
 from aoccommon import *
 
-def shortestPath(map, starts, mapDist):
-    queue = starts
+def shortestPath(map, queue, mapDist):
     while queue:
-        q = queue[0]
+        q = queue.pop(0)
 
-        neighbours = getNeighbours(map, q[0], q[1])
-        for n in neighbours:
-            if map[n[0]][n[1]] <= map[q[0]][q[1]] + 1:
-                length = mapDist[toCoord(q)] + 1
-                if toCoord(n) not in mapDist or length < mapDist[toCoord(n)]:
-                    mapDist[toCoord(n)] = length
-                    queue.append([n[0], n[1]])
-        del queue[0]
+        for n in getNeighbours(map, q[0], q[1]):
+            dist = mapDist[toCoord(q)] + 1
+            if map[n[0]][n[1]] <= map[q[0]][q[1]] + 1 and (toCoord(n) not in mapDist or dist < mapDist[toCoord(n)]):
+                mapDist[toCoord(n)] = dist
+                queue.append([n[0], n[1]])
     return mapDist
 
 with open('Dec12_input.txt') as f:
@@ -30,16 +26,15 @@ with open('Dec12_input.txt') as f:
             height = 0
             if lines[y][x] == "S":
                 starts.insert(0, [y,x])
-
                 mapDist1[toCoord([y,x])] = 0
                 mapDist2[toCoord([y,x])] = 0
-                height = ord("a") - ord("a")
+                height = ord("a")
             elif lines[y][x] == "E":
                 end = [y,x]
-                height = ord("z") - ord("a")
+                height = ord("z")
             else:
-                height = ord(lines[y][x]) - ord("a")
-                if not height:
+                height = ord(lines[y][x])
+                if height == ord("a"):
                     mapDist2[toCoord([y,x])] = 0
                     starts.append([y,x])
             row.append(height)
